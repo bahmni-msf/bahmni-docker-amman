@@ -163,7 +163,7 @@ services:
   metabasedb:
     image: 485402728093.dkr.ecr.ap-south-1.amazonaws.com/bahmni-lite/postgres:${METABASE_POSTGRES_IMAGE_TAG:?}
     restart: on-failure:[3]
-    profiles: ["metabase", "bahmni-mart"]
+    profiles: ["metabase", "bahmni-mart", "emr"]
     environment:
       TZ: ${TZ}
       POSTGRES_DB: ${METABASE_DB_NAME:?}
@@ -178,7 +178,7 @@ services:
     restart: on-failure:[3]
     ports:
       - "9003:3000"
-    profiles: ["metabase", "bahmni-mart"]
+    profiles: ["metabase", "bahmni-mart", "emr"]
     environment:
       TZ: ${TZ}
       MB_ADMIN_EMAIL: ${METABASE_ADMIN_EMAIL:?}
@@ -203,7 +203,7 @@ services:
 
   martdb:
     image: 485402728093.dkr.ecr.ap-south-1.amazonaws.com/bahmni-lite/postgres:${BAHMNI_MART_DB_IMAGE_TAG:?}
-    profiles: ["bahmni-mart"]
+    profiles: ["bahmni-mart", "emr"]
     environment:
       TZ: ${TZ}
       POSTGRES_DB: ${MART_DB_NAME:?}
@@ -215,7 +215,7 @@ services:
 
   mart:
     image: 485402728093.dkr.ecr.ap-south-1.amazonaws.com/bahmni-msf-lite/mart:${BAHMNI_MART_IMAGE_TAG:?}
-    profiles: ["bahmni-mart"]
+    profiles: ["bahmni-mart", "emr"]
     environment:
       TZ: ${TZ}
       CRON_TIME: ${MART_CRON_TIME:?}
