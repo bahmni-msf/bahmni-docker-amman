@@ -89,7 +89,7 @@ services:
     logging: *log-config
 
   openmrsdb:
-    image: ${OPENMRS_DB_IMAGE_NAME:?}
+    image: image: 485402728093.dkr.ecr.ap-south-1.amazonaws.com/bahmni-lite/mysql:${OPENMRS_DB_IMAGE_NAME:?}
     restart: always
     profiles: ["emr","bahmni-lite", "metabase", "bahmni-mart"]
     command: --character-set-server=utf8 --collation-server=utf8_general_ci
@@ -102,7 +102,6 @@ services:
     volumes:
       - 'openmrsdbdata:/var/lib/mysql'
       - 'configuration_checksums:/configuration_checksums'
-      - '/Users/bavisettivenkatesh/venky/RealProjects/bahmni/amman-92/bahmni-docker-amman/databaseBackup:/docker-entrypoint-initdb.d'
 
     logging: *log-config
 
@@ -227,6 +226,7 @@ services:
       OPENMRS_DB_NAME: ${OPENMRS_DB_NAME:?}
       OPENMRS_DB_USERNAME: ${OPENMRS_DB_USERNAME:?}
       OPENMRS_DB_PASSWORD: ${OPENMRS_DB_PASSWORD:?}
+      DEFAULT_CONFIG_FILE_PATH_FOR_MART: ${DEFAULT_CONFIG_FILE_PATH_FOR_MART}
     depends_on:
      - martdb
      - openmrsdb
@@ -235,6 +235,7 @@ services:
      - reports
     volumes:
      - 'bahmni-clinical-forms:/home/bahmni/clinical_forms'
+     - "${CONFIG_VOLUME:?}:/home/bahmni/bahmni_config/:ro"
 
   bahmni-web:
     image: 485402728093.dkr.ecr.ap-south-1.amazonaws.com/bahmni-msf-lite/bahmni-web:${BAHMNI_WEB_IMAGE_TAG:?}
@@ -421,3 +422,4 @@ volumes:
   metabase-data:
   bahmni-lab-results:
   amman-exports:
+   bahmni-queued-reports:
