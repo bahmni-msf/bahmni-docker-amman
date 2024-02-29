@@ -91,6 +91,7 @@ services:
       MYSQL_USER: ${OPENMRS_DB_USERNAME:?}
       MYSQL_PASSWORD: ${OPENMRS_DB_PASSWORD:?}
     volumes:
+      - "./openmrsdb/docker.cnf:/etc/mysql/conf.d/docker.cnf"
       - 'openmrsdbdata:/var/lib/mysql'
       - 'configuration_checksums:/configuration_checksums'
 
@@ -249,8 +250,9 @@ services:
       MYSQL_DATABASE: ${REPORTS_DB_NAME:?}
       MYSQL_USER: ${REPORTS_DB_USERNAME:?}
       MYSQL_PASSWORD: ${REPORTS_DB_PASSWORD:?}
-    # volumes:
-    #   - 'reportsdbdata:/var/lib/mysql'
+    volumes:
+      - "./reportsdb/my.cnf:/etc/my.cnf"
+      # - 'reportsdbdata:/var/lib/mysql'
     logging: *log-config
 
   patient-documents:
