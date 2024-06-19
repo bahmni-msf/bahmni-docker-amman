@@ -1,0 +1,6 @@
+fileignoreconfig:
+- filename: bahmni-lite/.env
+  checksum: dd9e12442c49d06d548f5e63c80ba93593748811454de89f2d2b28e4f7bfde14
+- filename: bahmni-lite/.env.dev
+  checksum: b8d86003e8d92b09ffbc1dc6590a83c1d39725d5d4f56a1a326cd35dc310ed4f
+version: ""
