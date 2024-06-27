@@ -220,6 +220,7 @@ services:
     volumes:
       - "${CONFIG_VOLUME:?}:/etc/bahmni_config/:ro"
       # - "bahmni-queued-reports:/home/bahmni/reports"
+    entrypoint: ["/bin/sh", "-c", "rm -f /tmp/macroTemplates && ln -s /etc/bahmni_config/openmrs/apps/reports/macroTemplates /tmp/ && exec ./start.sh"]
     depends_on:
       - reportsdb
       - openmrsdb
