@@ -36,7 +36,7 @@ services:
 
   openmrs:
     profiles: ["emr","bahmni-lite","bahmni-mart"]
-    image: 485402728093.dkr.ecr.ap-south-1.amazonaws.com/bahmni-msf-lite/openmrs-amman:${OPENMRS_IMAGE_TAG:?}
+    image: docker.io/bahmni/openmrs:ipd
     environment:
       TZ: ${TZ}
       OMRS_DB_NAME: ${OPENMRS_DB_NAME:?}
