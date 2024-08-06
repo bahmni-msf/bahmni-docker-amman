@@ -28,6 +28,80 @@ services:
       - ../logging/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
       - grafana-storage:/var/lib/grafana
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../logging/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-storage:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    hostname: cadvisor
+    platform: linux/aarch64
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+    ports:
+      - "8080:8080"
+
+  mysql-exporter:
+    image: prom/mysqld-exporter:latest
+    profiles: ["emr", "logging"]
+    environment:
+      DATA_SOURCE_NAME: "${MYSQLD_EXPORTER_USER:?}:${MYSQLD_EXPORTER_PASSWORD:?}@${OPENMRS_DB_HOST:?}:3306/database"
+      MYSQL_EXPORTER_USER: ${MYSQLD_EXPORTER_USER:?}
+      MYSQL_EXPORTER_PASSWORD: ${MYSQLD_EXPORTER_PASSWORD:?}
+      MYSQL_HOST: ${OPENMRS_DB_HOST:?}
+      MYSQL_PORT: ${MYSQLD_EXPORTER_PORT:?}
+    volumes:
+      - ../logging/my.cnf:/.my.cnf
+    ports:
+      - "9104:9104"
+    command:
+      - --config.my-cnf=/.my.cnf
+      - --collect.auto_increment.columns
+      - --collect.binlog_size
+      - --collect.info_schema.innodb_metrics
+      - --collect.info_schema.processlist
+      - --collect.info_schema.tables
+      - --collect.info_schema.tablestats
+      - --collect.info_schema.userstats
+      - --collect.perf_schema.eventsstatements
+      - --collect.perf_schema.eventsstatements.digest_text_limit=120
+      - --collect.perf_schema.eventsstatements.limit=250
+      - --collect.perf_schema.eventsstatements.timelimit=60
+      - --collect.perf_schema.file_instances
+      - --collect.perf_schema.indexiowaits
+      - --collect.perf_schema.tableiowaits
+      - --collect.perf_schema.tablelocks
+    depends_on:
+      - openmrsdb
+
 volumes:
   grafana-storage:
   loki:
+  prometheus-storage:
