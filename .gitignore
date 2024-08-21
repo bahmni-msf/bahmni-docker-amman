@@ -3,3 +3,6 @@
 **/backup-artifacts/*
 **/restore-artifacts/*
 .DS_Store
+**/glowroot/logs/*
+**/glowroot/tmp
+**/glowroot/*.json

@@ -1,8 +1,12 @@
 version: '3.7'
 
+networks:
+  heimdall-network:
+    driver: bridge
+
 services:
   loki:
-    profiles: ["logging"]
+    profiles: ["emr", "logging"]
     image: grafana/loki:${LOKI_IMAGE_TAG:?}
     ports:
       - "3100:3100"
@@ -12,14 +16,14 @@ services:
       - loki:/loki
 
   promtail:
-    profiles: ["logging"]
+    profiles: ["emr", "logging"]
     image: grafana/promtail:${PROMTAIL_IMAGE_TAG:?}
     volumes:
       - /var/log:/var/log
     command: -config.file=/etc/promtail/config.yml
 
   grafana:
-    profiles: ["logging"]
+    profiles: ["emr", "logging"]
     image: grafana/grafana:${GRAFANA_IMAGE_TAG:?}
     environment:
       GF_SERVER_SERVE_FROM_SUB_PATH: "true"
@@ -29,6 +33,7 @@ services:
       - grafana-storage:/var/lib/grafana
 
   prometheus:
+    profiles: ["emr", "logging"]
     image: prom/prometheus
     container_name: prometheus
     restart: unless-stopped
@@ -41,6 +46,7 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
 
   node-exporter:
+    profiles: ["emr", "logging"]
     image: prom/node-exporter:latest
     restart: unless-stopped
     volumes:
@@ -56,6 +62,7 @@ services:
       - "9100:9100"
 
   cadvisor:
+    profiles: ["emr", "logging"]
     image: gcr.io/cadvisor/cadvisor:latest
     hostname: cadvisor
     platform: linux/aarch64
@@ -85,6 +92,9 @@ services:
       - --config.my-cnf=/.my.cnf
       - --collect.auto_increment.columns
       - --collect.binlog_size
+      - --collect.engine_innodb_status
+      - --collect.engine_tokudb_status
+      - --collect.global_status
       - --collect.info_schema.innodb_metrics
       - --collect.info_schema.processlist
       - --collect.info_schema.tables
@@ -100,6 +110,16 @@ services:
       - --collect.perf_schema.tablelocks
     depends_on:
       - openmrsdb
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter:${BLACKBOX_EXPORTER_TAG}
+    profiles: ["emr", "logging"]
+    ports:
+        - "9115:9115"
+    volumes:
+      - ../logging/blackbox.yml:/etc/blackbox_exporter/config.yml
+    command:
+      - '--config.file=/etc/blackbox_exporter/config.yml'
 
 volumes:
   grafana-storage:
