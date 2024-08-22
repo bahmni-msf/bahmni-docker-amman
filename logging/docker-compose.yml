@@ -58,8 +58,6 @@ services:
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-    ports:
-      - "9100:9100"
 
   cadvisor:
     profiles: ["emr", "logging"]
@@ -72,22 +70,17 @@ services:
       - "/sys:/sys:ro"
       - "/var/lib/docker/:/var/lib/docker:ro"
       - "/dev/disk/:/dev/disk:ro"
-    ports:
-      - "8080:8080"
 
   mysql-exporter:
     image: prom/mysqld-exporter:latest
     profiles: ["emr", "logging"]
     environment:
-      DATA_SOURCE_NAME: "${MYSQLD_EXPORTER_USER:?}:${MYSQLD_EXPORTER_PASSWORD:?}@${OPENMRS_DB_HOST:?}:3306/database"
       MYSQL_EXPORTER_USER: ${MYSQLD_EXPORTER_USER:?}
       MYSQL_EXPORTER_PASSWORD: ${MYSQLD_EXPORTER_PASSWORD:?}
       MYSQL_HOST: ${OPENMRS_DB_HOST:?}
       MYSQL_PORT: ${MYSQLD_EXPORTER_PORT:?}
     volumes:
       - ../logging/my.cnf:/.my.cnf
-    ports:
-      - "9104:9104"
     command:
       - --config.my-cnf=/.my.cnf
       - --collect.auto_increment.columns
