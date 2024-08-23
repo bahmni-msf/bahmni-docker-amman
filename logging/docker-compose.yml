@@ -61,15 +61,18 @@ services:
 
   cadvisor:
     profiles: ["emr", "logging"]
-    image: gcr.io/cadvisor/cadvisor:latest
-    hostname: cadvisor
-    platform: linux/aarch64
+    image: gcr.io/cadvisor/cadvisor:${CADVISOR_IMAGE_TAG:?}
+    privileged: true
+    ports:
+      - "8080:8080"
     volumes:
-      - "/:/rootfs:ro"
-      - "/var/run:/var/run:ro"
-      - "/sys:/sys:ro"
-      - "/var/lib/docker/:/var/lib/docker:ro"
-      - "/dev/disk/:/dev/disk:ro"
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
 
   mysql-exporter:
     image: prom/mysqld-exporter:latest
