@@ -75,8 +75,8 @@ services:
       - 'bahmni-clinical-forms:/home/bahmni/clinical_forms'
       - 'configuration_checksums:/openmrs/data/configuration_checksums'
       - "amman-exports:/home/bahmni/amman_export/:ro"
-      - '../glowroot:/opt/glowroot'
-      - 'glowroot-data:/opt/glowroot/data'
+      # - '../glowroot:/opt/glowroot'
+      # - 'glowroot-data:/opt/glowroot/data'
 
     depends_on:
       - openmrsdb
@@ -312,4 +312,4 @@ volumes:
   amman-exports:
   bahmni-queued-reports:
   custom-sql:
-  glowroot-data:
+  # glowroot-data:
