@@ -74,7 +74,8 @@ services:
       - 'bahmni-document-images:/home/bahmni/document_images'
       - 'bahmni-clinical-forms:/home/bahmni/clinical_forms'
       - 'configuration_checksums:/openmrs/data/configuration_checksums'
-      - "amman-exports:/home/bahmni/amman_export/:ro"
+      - 'custom-sql:/home/bahmni/custom-sql:ro'
+      - 'amman-exports:/home/bahmni/amman_export/:ro'
       # - '../glowroot:/opt/glowroot'
       # - 'glowroot-data:/opt/glowroot/data'
 
@@ -296,6 +297,7 @@ services:
         - 'bahmni-queued-reports:/mounts/bahmni-queued-reports'
         - 'configuration_checksums:/mounts/configuration_checksums'
         - 'custom-sql:/mounts/custom-sql'
+        - 'amman-exports:/mounts/amman-exports'
 
 volumes:
   openmrs-data:

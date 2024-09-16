@@ -57,5 +57,6 @@ copy_from_restore_to_mount /restore-artifacts/reports /mounts/bahmni-queued-repo
 copy_from_restore_to_mount /restore-artifacts/uploaded-files /mounts/bahmni-uploaded-files
 copy_from_restore_to_mount /restore-artifacts/dcm4chee_archive /mounts/dcm4chee-archive
 copy_from_restore_to_mount /restore-artifacts/custom-sql /mounts/custom-sql
+copy_from_restore_to_mount /restore-artifacts/amman_export /mounts/amman-exports
 
 log_info -e "File System Restore completed."

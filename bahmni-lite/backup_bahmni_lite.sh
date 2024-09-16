@@ -64,3 +64,8 @@ backup_container_file_system $openmrs_service_name "/openmrs/data/configuration_
 log_info "Taking backup for Queued Reports results"
 backup_container_file_system $reports_service_name "/home/bahmni/reports" "$backup_subfolder_path"
 
+log_info "Taking backup for custom sql"
+backup_container_file_system $reports_service_name "/home/bahmni/custom-sql" "$backup_subfolder_path"
+
+log_info "Taking backup for Amman exports"
+backup_container_file_system $reports_service_name "/home/bahmni/amman_export" "$backup_subfolder_path"
