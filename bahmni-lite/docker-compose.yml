@@ -269,7 +269,7 @@ services:
       MYSQL_PASSWORD: ${REPORTS_DB_PASSWORD:?}
     volumes:
       - "./reportsdb/my.cnf:/etc/my.cnf"
-      # - 'reportsdbdata:/var/lib/mysql'
+      - 'reportsdbdata:/var/lib/mysql'
     logging: *log-config
 
   # Associated Repo: https://github.com/Bahmni/patient-documents
@@ -314,6 +314,7 @@ services:
 volumes:
   openmrs-data:
   openmrsdbdata:
+  reportsdbdata:
   bahmni-patient-images:
   bahmni-document-images:
   bahmni-clinical-forms:
