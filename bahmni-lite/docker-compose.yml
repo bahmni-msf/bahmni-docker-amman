@@ -118,7 +118,7 @@ services:
 
   # Associated Repo: https://github.com/bahmni-msf/bahmni-metabase/
   metabase:
-    image: ${ECR_URL}/bahmni-lite/bahmni/bahmni-metabase:${METABASE_IMAGE_TAG:?}
+    image: ${ECR_URL}/bahmni-msf-lite/bahmni-metabase:${METABASE_IMAGE_TAG:?}
     restart: on-failure:[3]
     ports:
       - "9003:3000"
