@@ -32,6 +32,7 @@ services:
   # Associated Repo: https://github.com/bahmni-msf/amman-config/
   bahmni-config:
     image: '${ECR_URL}/bahmni-msf-lite/amman-config:${CONFIG_IMAGE_TAG:?}'
+    restart: always
     volumes:
       - '${CONFIG_VOLUME:?}:/usr/local/bahmni_config'
     logging: *log-config
@@ -40,6 +41,7 @@ services:
   openmrs:
     profiles: ["emr","bahmni-lite","bahmni-mart"]
     image: ${ECR_URL}/bahmni-msf-lite/openmrs-amman:${OPENMRS_IMAGE_TAG:?}
+    restart: always
     environment:
       TZ: ${TZ}
       OMRS_DB_NAME: ${OPENMRS_DB_NAME:?}
@@ -145,6 +147,7 @@ services:
   martdb:
     image: ${ECR_URL}/bahmni-lite/postgres:${BAHMNI_MART_DB_IMAGE_TAG:?}
     profiles: ["bahmni-mart", "emr"]
+    restart: always
     environment:
       TZ: ${TZ}
       POSTGRES_DB: ${MART_DB_NAME:?}
@@ -157,6 +160,7 @@ services:
   mart:
     image: ${ECR_URL}/bahmni-msf-lite/mart:${BAHMNI_MART_IMAGE_TAG:?}
     profiles: ["bahmni-mart", "emr"]
+    restart: always
     environment:
       TZ: ${TZ}
       CRON_TIME: ${MART_CRON_TIME:?}
@@ -185,6 +189,7 @@ services:
   bahmni-web:
     image: ${ECR_URL}/bahmni-msf-lite/bahmni-web:${BAHMNI_WEB_IMAGE_TAG:?}
     profiles: ["emr","bahmni-lite","bahmni-mart"]
+    restart: always
     volumes:
       - "${CONFIG_VOLUME:?}:/usr/local/apache2/htdocs/bahmni_config/:ro"
     #   - "${BAHMNI_APPS_PATH:?}/ui/app/:/usr/local/apache2/htdocs/bahmni"
@@ -195,6 +200,7 @@ services:
   implementer-interface:
     image: ${ECR_URL}/bahmni-msf-lite/implementer-interface:${IMPLEMENTER_INTERFACE_IMAGE_TAG:?}
     profiles: ["implementer-interface","emr","bahmni-lite"]
+    restart: always
     #volumes:
     #  - "${IMPLEMENTER_INTERFACE_CODE_PATH:?}/dist:/usr/local/apache2/htdocs/implementer-interface"
     depends_on:
@@ -205,6 +211,7 @@ services:
   print-forms:
     image: ${ECR_URL}/bahmni-msf-lite/print-forms:${PRINT_FORMS_IMAGE_TAG:?}
     profiles: ["print-forms","emr","bahmni-lite"]
+    restart: always
     #volumes:
     #  - "${IMPLEMENTER_INTERFACE_CODE_PATH:?}/dist:/usr/local/apache2/htdocs/implementer-interface"
     depends_on:
@@ -215,6 +222,7 @@ services:
   reports:
     image: ${ECR_URL}/bahmni-lite/bahmni/reports:${REPORTS_IMAGE_TAG:?}
     profiles: ["reports","bahmni-lite", "emr","bahmni-mart"]
+    restart: always
     environment:
       TZ: ${TZ}
       OPENMRS_DB_HOST: ${OPENMRS_DB_HOST:?}
@@ -241,6 +249,7 @@ services:
   amman-exports:
     image: ${ECR_URL}/bahmni-msf-lite/amman-exports:${AMMAN_EXPORTS_IMAGE_TAG:?}
     profiles: ["amman-exports", "emr", "bahmni-lite"]
+    restart: always
     environment:
       TZ: ${AMMAN_TIME_ZONE:?}
       OPENMRS_DB_SERVER: ${OPENMRS_DB_SERVER:?}
@@ -273,6 +282,7 @@ services:
   patient-documents:
     image: '${ECR_URL}/bahmni-lite/bahmni/patient-documents:${PATIENT_DOCUMENTS_TAG:?}'
     profiles: ["emr","bahmni-lite"]
+    restart: always
     volumes:
       - 'bahmni-document-images:/usr/share/nginx/html/document_images'
       - 'bahmni-lab-results:/usr/share/nginx/html/uploaded_results'
@@ -288,6 +298,7 @@ services:
   appointments:
     image: ${ECR_URL}/bahmni-msf-lite/appointments:${APPOINTMENTS_IMAGE_TAG:?}
     profiles: ["emr","bahmni-lite"]
+    restart: always
     # volumes:
     # - "${APPOINTMENTS_PATH:?}/dist/:/usr/local/apache2/htdocs/appointments"
 
