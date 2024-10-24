@@ -109,7 +109,7 @@ services:
 
   metabasedb:
     image: ${ECR_URL}/bahmni-lite/postgres:${METABASE_POSTGRES_IMAGE_TAG:?}
-    restart: on-failure:[3]
+    restart: always
     profiles: ["metabase", "bahmni-mart", "emr"]
     environment:
       TZ: ${TZ}
@@ -310,20 +310,30 @@ services:
     volumes:
         - "${RESTORE_ARTIFACTS_PATH}:/restore-artifacts"
         - '../backup_restore/restore_docker_volumes.sh:/restore_docker_volumes.sh'
+#       - 'bahmni-patient-images:/mounts/bahmni-patient-images'
+#       - 'bahmni-document-images:/mounts/bahmni-document-images'
         - 'bahmni-clinical-forms:/mounts/bahmni-clinical-forms'
         - 'bahmni-lab-results:/mounts/bahmni-lab-results'
+#       - 'bahmni-uploaded-files:/mounts/bahmni-uploaded-files'
+#       - 'bahmni-queued-reports:/mounts/bahmni-queued-reports'
         - 'configuration_checksums:/mounts/configuration_checksums'
         - 'custom-sql:/mounts/custom-sql'
+#       - 'amman-exports:/mounts/amman-exports'
 
 volumes:
   openmrs-data:
   openmrsdbdata:
   reportsdbdata:
+#  bahmni-patient-images:
+#  bahmni-document-images:
   bahmni-clinical-forms:
+#  bahmni-uploaded-files:
   bahmni-config:
   configuration_checksums:
   mart-data:
   metabase-data:
   bahmni-lab-results:
+#  amman-exports:
+#  bahmni-queued-reports:
   custom-sql:
   # glowroot-data:
