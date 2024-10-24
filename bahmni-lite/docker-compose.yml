@@ -73,14 +73,14 @@ services:
     volumes:
       - "${CONFIG_VOLUME:?}:/etc/bahmni_config/:ro"
       - "bahmni-lab-results:/home/bahmni/uploaded_results"
-      - "bahmni-uploaded-files:/home/bahmni/uploaded-files"
+      - "/home/bahmni/uploaded-files:/home/bahmni/uploaded-files"
       # - "${BAHMNI_OPENMRS_MODULES_PATH:?}/:/openmrs/data/modules/"
-      - 'bahmni-patient-images:/home/bahmni/patient_images'
-      - 'bahmni-document-images:/home/bahmni/document_images'
+      - '/home/bahmni/patient_images:/home/bahmni/patient_images'
+      - '/home/bahmni/document_images:/home/bahmni/document_images'
       - 'bahmni-clinical-forms:/home/bahmni/clinical_forms'
       - 'configuration_checksums:/openmrs/data/configuration_checksums'
       - 'custom-sql:/home/bahmni/custom-sql:ro'
-      - 'amman-exports:/home/bahmni/amman_export/:ro'
+      - '/home/bahmni/amman_export:/home/bahmni/amman_export/:ro'
       # - '../glowroot:/opt/glowroot'
       # - 'glowroot-data:/opt/glowroot/data'
 
@@ -109,7 +109,7 @@ services:
 
   metabasedb:
     image: ${ECR_URL}/bahmni-lite/postgres:${METABASE_POSTGRES_IMAGE_TAG:?}
-    restart: on-failure:[3]
+    restart: always
     profiles: ["metabase", "bahmni-mart", "emr"]
     environment:
       TZ: ${TZ}
@@ -237,7 +237,7 @@ services:
       REPORTS_DB_PASSWORD: ${REPORTS_DB_PASSWORD:?}
     volumes:
       - "${CONFIG_VOLUME:?}:/etc/bahmni_config/:ro"
-      - "bahmni-queued-reports:/home/bahmni/reports"
+      - "/home/bahmni/reports:/home/bahmni/reports"
     entrypoint: ["/bin/sh", "-c", "rm -f /tmp/macroTemplates && ln -s /etc/bahmni_config/openmrs/apps/reports/macroTemplates /tmp/ && exec ./start.sh"]
     depends_on:
       - reportsdb
@@ -258,7 +258,7 @@ services:
       AMMAN_EXPORTS_CRON_TIME: ${AMMAN_EXPORTS_CRON_TIME:?}
     volumes:
       - "${CONFIG_VOLUME:?}:/var/www/bahmni_config/:rw"
-      - "amman-exports:/home/bahmni/amman_export/:rw"
+      - "/home/bahmni/amman_export:/home/bahmni/amman_export/:rw"
     depends_on:
       - openmrsdb
     logging: *log-config
@@ -267,6 +267,7 @@ services:
     platform: linux/amd64
     image: ${ECR_URL}/bahmni-lite/mysql:5.7
     profiles: ["reports","bahmni-lite", "emr","bahmni-mart"]
+    restart: always
     environment:
       TZ: ${TZ}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?}
@@ -284,9 +285,9 @@ services:
     profiles: ["emr","bahmni-lite"]
     restart: always
     volumes:
-      - 'bahmni-document-images:/usr/share/nginx/html/document_images'
-      - 'bahmni-lab-results:/usr/share/nginx/html/uploaded_results'
-      - 'bahmni-uploaded-files:/usr/share/nginx/html/uploaded-files'
+      - '/home/bahmni/document_images:/usr/share/nginx/html/document_images'
+      - '/home/bahmni/uploaded_results:/usr/share/nginx/html/uploaded_results'
+      - '/home/bahmni/uploaded-files:/usr/share/nginx/html/uploaded-files'
     environment:
       TZ: ${TZ}
       OPENMRS_HOST: ${OPENMRS_HOST:?}
@@ -309,30 +310,30 @@ services:
     volumes:
         - "${RESTORE_ARTIFACTS_PATH}:/restore-artifacts"
         - '../backup_restore/restore_docker_volumes.sh:/restore_docker_volumes.sh'
-        - 'bahmni-patient-images:/mounts/bahmni-patient-images'
-        - 'bahmni-document-images:/mounts/bahmni-document-images'
+#       - 'bahmni-patient-images:/mounts/bahmni-patient-images'
+#       - 'bahmni-document-images:/mounts/bahmni-document-images'
         - 'bahmni-clinical-forms:/mounts/bahmni-clinical-forms'
         - 'bahmni-lab-results:/mounts/bahmni-lab-results'
-        - 'bahmni-uploaded-files:/mounts/bahmni-uploaded-files'
-        - 'bahmni-queued-reports:/mounts/bahmni-queued-reports'
+#       - 'bahmni-uploaded-files:/mounts/bahmni-uploaded-files'
+#       - 'bahmni-queued-reports:/mounts/bahmni-queued-reports'
         - 'configuration_checksums:/mounts/configuration_checksums'
         - 'custom-sql:/mounts/custom-sql'
-        - 'amman-exports:/mounts/amman-exports'
+#       - 'amman-exports:/mounts/amman-exports'
 
 volumes:
   openmrs-data:
   openmrsdbdata:
   reportsdbdata:
-  bahmni-patient-images:
-  bahmni-document-images:
+#  bahmni-patient-images:
+#  bahmni-document-images:
   bahmni-clinical-forms:
-  bahmni-uploaded-files:
+#  bahmni-uploaded-files:
   bahmni-config:
   configuration_checksums:
   mart-data:
   metabase-data:
   bahmni-lab-results:
-  amman-exports:
-  bahmni-queued-reports:
+#  amman-exports:
+#  bahmni-queued-reports:
   custom-sql:
   # glowroot-data:
